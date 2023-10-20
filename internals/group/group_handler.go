@@ -16,7 +16,8 @@ func NewGroupHandler(s Service) *Handler {
 }
 
 func (h *Handler) CreateGroup(c *gin.Context) {
-	// userId, _ := c.Get("user_id")
+	userId, _ := c.Get("user_id")
+	idInt := userId.(int)
 	var groupReq GroupRequest
 	if err := c.ShouldBindJSON(&groupReq); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -25,7 +26,7 @@ func (h *Handler) CreateGroup(c *gin.Context) {
 		return
 	}
 
-	g, err := h.Service.CreateGroup(1, groupReq)
+	g, err := h.Service.CreateGroup(idInt, groupReq)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err,

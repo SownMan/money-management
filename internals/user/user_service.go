@@ -59,7 +59,7 @@ func (s *userService) CreateUser(user UserRequest) (User, error) {
 type MyJWTClaims struct {
 	ID    string `json:"id"`
 	Email string `json:"email"`
-	jwt.RegisteredClaims
+	jwt.MapClaims
 }
 
 func (s *userService) Login(request LoginRequest) (LoginResponse, error) {
@@ -79,9 +79,9 @@ func (s *userService) Login(request LoginRequest) (LoginResponse, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, MyJWTClaims{
 		ID:    strconv.Itoa(int(user.ID)),
 		Email: user.Email,
-		RegisteredClaims: jwt.RegisteredClaims{
-			Issuer:    strconv.Itoa(int(user.ID)),
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(24 * time.Hour)),
+		MapClaims: jwt.MapClaims{
+			"sub": user.ID,
+			"exp": time.Now().Add(time.Hour * 24 * 30).Unix(),
 		},
 	})
 	ss, err := token.SignedString([]byte(os.Getenv("SECRETKEY")))

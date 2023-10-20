@@ -3,6 +3,7 @@ package router
 import (
 	"money-management/internals/group"
 	"money-management/internals/user"
+	middlewre "money-management/middleware"
 
 	"github.com/gin-gonic/gin"
 )
@@ -15,13 +16,13 @@ func InitRouter(userHandler *user.Handler, groupHandler *group.Handler) {
 	r.POST("/signup", userHandler.CreateUser)
 	r.POST("/login", userHandler.Login)
 	r.GET("/logout", userHandler.Logout)
-	r.PUT("/users/:id", userHandler.UpdateUser)
+	r.PUT("/users/:id", middlewre.RequireAuth, userHandler.UpdateUser)
 
 	//group
-	r.GET("/groups/:id", groupHandler.FindById)
-	r.POST("/groups", groupHandler.CreateGroup)
-	r.PUT("/groups/:id", groupHandler.UpdateGroup)
-	r.DELETE("/groups/:id", groupHandler.DeleteGroup)
+	r.GET("/groups/:id", middlewre.RequireAuth, groupHandler.FindById)
+	r.POST("/groups", middlewre.RequireAuth, groupHandler.CreateGroup)
+	r.PUT("/groups/:id", middlewre.RequireAuth, groupHandler.UpdateGroup)
+	r.DELETE("/groups/:id", middlewre.RequireAuth, groupHandler.DeleteGroup)
 
 }
 

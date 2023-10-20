@@ -25,14 +25,19 @@ func RequireAuth(c *gin.Context) {
 		}
 
 		// hmacSampleSecret is a []byte containing your secret, e.g. []byte("my_secret_key")
-		return []byte(os.Getenv("SECRET")), nil
+		return []byte(os.Getenv("SECRETKEY")), nil
 	})
 
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+
+		claim := claims["MapClaims"]
+		exp := claim.(map[string]interface{})
+
 		//check the exp
-		if float64(time.Now().Unix()) > claims["exp"].(float64) {
+		if float64(time.Now().Unix()) > exp["exp"].(float64) {
 			c.AbortWithStatus(http.StatusUnauthorized)
 		}
+
 		//find the user wirh token sub
 		var user user.User
 		initializer.DB.Find(&user, claims["sub"])
@@ -41,7 +46,7 @@ func RequireAuth(c *gin.Context) {
 			c.AbortWithStatus(http.StatusUnauthorized)
 		}
 		//attach to req
-		c.Set("user_id", user.ID)
+		c.Set("user_id", int(user.ID))
 		//continue
 		c.Next()
 	} else {
