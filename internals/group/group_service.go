@@ -68,10 +68,19 @@ func (s *groupService) FindById(id int) (Group, error) {
 
 func (s *groupService) DeleteGroup(id int) (Group, error) {
 	group, err := s.Repository.FindById(id)
+
+	if err != nil {
+		return Group{}, err
+	}
+
+	userGroup, err := s.Repository.FindLinkByGroupId(int(group.ID))
 	if err != nil {
 		return Group{}, err
 	}
 
 	deletedGroup, err := s.Repository.DeleteGroup(group)
+
+	_, err = s.Repository.DeleteGroupLink(userGroup)
+
 	return deletedGroup, err
 }

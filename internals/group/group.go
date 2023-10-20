@@ -41,11 +41,12 @@ type Repository interface {
 	FindById(id int) (Group, error)
 	CreateGroup(group Group) (Group, error)
 	UpdateGroup(group Group) (Group, error)
-	CreateGroupLink(userGroup UserGroupLinks) (UserGroupLinks, error)
 	DeleteGroup(group Group) (Group, error)
-}
 
-//TODO HANDLE DELETING USERGROUPLINK ON DELETE GROUP
+	FindLinkByGroupId(id int) (UserGroupLinks, error)
+	CreateGroupLink(userGroup UserGroupLinks) (UserGroupLinks, error)
+	DeleteGroupLink(userGroup UserGroupLinks) (UserGroupLinks, error)
+}
 
 type Service interface {
 	FindById(id int) (Group, error)
