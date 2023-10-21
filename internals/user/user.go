@@ -1,6 +1,6 @@
 package user
 
-//USER TABLE
+// USER TABLE
 type User struct {
 	ID        uint   `gorm:"primaryKey" json:"id"`
 	FirstName string `gorm:"not null" json:"first_name"`
@@ -9,7 +9,7 @@ type User struct {
 	Password  string `gorm:"not null" json:"password"`
 }
 
-//USER AND FRIEND TABLE
+// USER AND FRIEND TABLE
 type UserUserLink struct {
 	UserID   int `gorm:"not null" json:"user_id"`
 	FriendID int `gorm:"not null" json:"friend_id"`
@@ -20,6 +20,13 @@ type UserRequest struct {
 	LastName  string `json:"last_name" binding:"required"`
 	Email     string `json:"email" binding:"required"`
 	Password  string `json:"password" binding:"required"`
+}
+
+type SignUpResponse struct {
+	ID        uint   `json:"id"`
+	FirstName string `json:"first_name"`
+	LastName  string `json:"last_name"`
+	Email     string `json:"email"`
 }
 
 type UserUpdateRequest struct {
@@ -48,7 +55,7 @@ type Repository interface {
 
 type Service interface {
 	GetUserById(id int) (User, error)
-	CreateUser(user UserRequest) (User, error)
+	CreateUser(user UserRequest) (SignUpResponse, error)
 	Login(request LoginRequest) (LoginResponse, error)
 	UpdateUser(id int, user UserUpdateRequest) (User, error)
 	DeleteUser(id int) (User, error)

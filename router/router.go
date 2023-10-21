@@ -4,6 +4,8 @@ import (
 	"money-management/internals/group"
 	"money-management/internals/user"
 	middlewre "money-management/middleware"
+	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -23,6 +25,13 @@ func InitRouter(userHandler *user.Handler, groupHandler *group.Handler) {
 	r.POST("/groups", middlewre.RequireAuth, groupHandler.CreateGroup)
 	r.PUT("/groups/:id", middlewre.RequireAuth, groupHandler.UpdateGroup)
 	r.DELETE("/groups/:id", middlewre.RequireAuth, groupHandler.DeleteGroup)
+
+	// test
+	r.GET("/test", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"test": time.Now(),
+		})
+	})
 
 }
 

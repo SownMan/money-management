@@ -24,15 +24,15 @@ func (s *userService) GetUserById(id int) (User, error) {
 	return u, err
 }
 
-func (s *userService) CreateUser(user UserRequest) (User, error) {
+func (s *userService) CreateUser(user UserRequest) (SignUpResponse, error) {
 	u, _ := s.Repository.GetUserByEmail(user.Email)
 	if u.ID != 0 {
-		return User{}, nil
+		return SignUpResponse{}, nil
 	}
 	//hash password
 	hashedPassword, err := util.HashPassword(user.Password)
 	if err != nil {
-		return User{}, err
+		return SignUpResponse{}, err
 	}
 	newUser := User{
 		FirstName: user.FirstName,
@@ -43,14 +43,13 @@ func (s *userService) CreateUser(user UserRequest) (User, error) {
 
 	r, err := s.Repository.CreateUser(newUser)
 	if err != nil {
-		return User{}, err
+		return SignUpResponse{}, err
 	}
-	res := User{
+	res := SignUpResponse{
 		ID:        r.ID,
 		FirstName: r.FirstName,
 		LastName:  r.LastName,
 		Email:     r.Email,
-		Password:  r.Password,
 	}
 
 	return res, nil
@@ -92,14 +91,19 @@ func (s *userService) Login(request LoginRequest) (LoginResponse, error) {
 	return LoginResponse{accessToken: ss, Email: user.Email, ID: int(user.ID)}, nil
 }
 
-func (s *userService) UpdateUser(id int, user UserUpdateRequest) (User, error) {
+func (s *userService) UpdateUser(id int, userReq UserUpdateRequest) (User, error) {
 	u, err := s.Repository.GetUserById(id)
 	if err != nil {
 		return User{}, err
 	}
-
-	u.FirstName = user.FirstName
-	u.LastName = user.LastName
+	if userReq.FirstName == "" {
+		userReq.FirstName = u.FirstName
+	}
+	if userReq.LastName == "" {
+		userReq.LastName = u.LastName
+	}
+	u.FirstName = userReq.FirstName
+	u.LastName = userReq.LastName
 
 	updatedUser, err := s.Repository.UpdateUser(u)
 	if err != nil {

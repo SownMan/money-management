@@ -34,7 +34,6 @@ type GroupRequest struct {
 	Cover          string    `json:"cover"`
 	MemberCapacity int       `json:"member_capacity"`
 	AdminCapacity  int       `json:"admin_capacity"`
-	TotalBalance   int       `json:"total_balance"`
 }
 
 type Repository interface {
