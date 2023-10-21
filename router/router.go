@@ -19,6 +19,7 @@ func InitRouter(userHandler *user.Handler, groupHandler *group.Handler) {
 	r.POST("/login", userHandler.Login)
 	r.GET("/logout", userHandler.Logout)
 	r.PUT("/users/:id", middlewre.RequireAuth, userHandler.UpdateUser)
+	r.DELETE("users/:id", middlewre.RequireAuth, userHandler.DeleteUser)
 
 	//group
 	r.GET("/groups/:id", middlewre.RequireAuth, groupHandler.FindById)

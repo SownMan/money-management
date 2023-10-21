@@ -37,9 +37,9 @@ type GroupRequest struct {
 }
 
 type GroupUpdateRequest struct {
-	Name           string    `json:"name" `
-	Description    string    `json:"description"`
-	BalanceTarget  int       `json:"balance_target"`
+	Name           string    `json:"name" binding:"required"`
+	Description    string    `json:"description" binding:"required"`
+	BalanceTarget  int       `json:"balance_target" binding:"required"`
 	DueDate        time.Time `json:"due_date"`
 	Cover          string    `json:"cover"`
 	MemberCapacity int       `json:"member_capacity"`

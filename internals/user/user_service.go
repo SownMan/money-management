@@ -113,5 +113,14 @@ func (s *userService) UpdateUser(id int, userReq UserUpdateRequest) (User, error
 }
 
 func (s *userService) DeleteUser(id int) (User, error) {
-	panic("uniple")
+	u, err := s.Repository.GetUserById(id)
+	if err != nil {
+		return User{}, err
+	}
+
+	dUser, err := s.Repository.DeleteUser(u)
+	if err != nil {
+		return User{}, err
+	}
+	return dUser, nil
 }

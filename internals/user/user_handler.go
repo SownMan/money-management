@@ -44,15 +44,26 @@ func (h *Handler) CreateUser(c *gin.Context) {
 }
 
 func (h *Handler) UpdateUser(c *gin.Context) {
+	authId, _ := c.Get("user_id")
 	idString := c.Param("id")
 	id, _ := strconv.Atoi(idString)
+
+	if id != authId {
+		c.JSON(http.StatusForbidden, gin.H{
+			"error": "you dont have permission to update this user",
+		})
+		return
+	}
 
 	u, err := h.Service.GetUserById(id)
 	if u.ID == 0 {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": err.Error(),
+			"error": "record not found",
 		})
 		return
+	}
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
 	}
 
 	var userRequest UserUpdateRequest
@@ -112,4 +123,26 @@ func (h *Handler) Logout(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"message": "logout successful",
 	})
+}
+
+func (h *Handler) DeleteUser(c *gin.Context) {
+	authId, _ := c.Get("user_id")
+	idString := c.Param("id")
+	id, _ := strconv.Atoi(idString)
+
+	if id != authId {
+		c.JSON(http.StatusForbidden, gin.H{
+			"error": "you dont have permission to update this user",
+		})
+		return
+	}
+
+	u, err := h.Service.DeleteUser(id)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err,
+		})
+	}
+	c.SetCookie("jwt", "", -1, "", "", false, true)
+	c.JSON(http.StatusOK, u)
 }
