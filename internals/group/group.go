@@ -36,6 +36,16 @@ type GroupRequest struct {
 	AdminCapacity  int       `json:"admin_capacity"`
 }
 
+type GroupUpdateRequest struct {
+	Name           string    `json:"name" `
+	Description    string    `json:"description"`
+	BalanceTarget  int       `json:"balance_target"`
+	DueDate        time.Time `json:"due_date"`
+	Cover          string    `json:"cover"`
+	MemberCapacity int       `json:"member_capacity"`
+	AdminCapacity  int       `json:"admin_capacity"`
+}
+
 type Repository interface {
 	FindById(id int) (Group, error)
 	CreateGroup(group Group) (Group, error)
@@ -49,7 +59,7 @@ type Repository interface {
 
 type Service interface {
 	FindById(id int) (Group, error)
-	UpdateGroup(id int, groupReq GroupRequest) (Group, error)
+	UpdateGroup(id int, groupReq GroupUpdateRequest) (Group, error)
 	CreateGroup(userId int, group GroupRequest) (Group, error)
 	DeleteGroup(id int) (Group, error)
 }

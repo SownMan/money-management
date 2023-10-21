@@ -36,29 +36,10 @@ func (s *groupService) CreateGroup(userId int, groupRequest GroupRequest) (Group
 	return g, nil
 }
 
-func (s *groupService) UpdateGroup(id int, groupReq GroupRequest) (Group, error) {
+func (s *groupService) UpdateGroup(id int, groupReq GroupUpdateRequest) (Group, error) {
 	g, err := s.Repository.FindById(id)
 	if err != nil {
 		return Group{}, err
-	}
-
-	if groupReq.Name == "" {
-		groupReq.Name = g.Name
-	}
-	if groupReq.Description == "" {
-		groupReq.Description = g.Description
-	}
-	if groupReq.BalanceTarget == 0 {
-		groupReq.BalanceTarget = g.BalanceTarget
-	}
-	if groupReq.DueDate.IsZero() {
-		groupReq.DueDate = g.DueDate
-	}
-	if groupReq.MemberCapacity == 0 {
-		groupReq.MemberCapacity = g.MemberCapacity
-	}
-	if groupReq.AdminCapacity == 0 {
-		groupReq.AdminCapacity = g.AdminCapacity
 	}
 
 	g.Name = groupReq.Name

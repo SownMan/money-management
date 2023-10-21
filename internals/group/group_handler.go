@@ -44,7 +44,7 @@ func (h *Handler) UpdateGroup(c *gin.Context) {
 		return
 	}
 
-	var groupReq GroupRequest
+	var groupReq GroupUpdateRequest
 	if err := c.ShouldBindJSON(&groupReq); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err,
