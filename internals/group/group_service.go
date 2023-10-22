@@ -66,6 +66,14 @@ func (s *groupService) FindById(id int) (Group, error) {
 	return group, nil
 }
 
+func (s *groupService) FindLinkByUserAndGroup(groupId, userId int) (UserGroupLinks, error) {
+	link, err := s.Repository.FindLinkByUserAndGroup(groupId, userId)
+	if err != nil {
+		return UserGroupLinks{}, err
+	}
+	return link, nil
+}
+
 func (s *groupService) DeleteGroup(id int) (Group, error) {
 	group, err := s.Repository.FindById(id)
 

@@ -31,7 +31,7 @@ func RequireAuth(c *gin.Context) {
 
 		claim := claims["MapClaims"]
 		exp := claim.(map[string]interface{})
-
+		fmt.Println(exp)
 		//check the exp
 		if float64(time.Now().Unix()) > exp["exp"].(float64) {
 			c.AbortWithStatus(http.StatusUnauthorized)
@@ -39,7 +39,7 @@ func RequireAuth(c *gin.Context) {
 
 		//find the user wirh token sub
 		var user user.User
-		initializer.DB.Find(&user, claims["sub"])
+		initializer.DB.Find(&user, exp["sub"])
 
 		if user.ID == 0 {
 			c.AbortWithStatus(http.StatusUnauthorized)

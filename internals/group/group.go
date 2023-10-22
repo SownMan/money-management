@@ -23,7 +23,7 @@ type Group struct {
 type UserGroupLinks struct {
 	UserID  int    `gorm:"not null" json:"user_id"`
 	GroupID int    `gorm:"not null" json:"group_id"`
-	Role    string `gorm:"not null" json:"role"`
+	Role    string `gorm:"not null, check: role IN('superadmin', 'admin')" json:"role"`
 }
 
 type GroupRequest struct {
@@ -53,6 +53,7 @@ type Repository interface {
 	DeleteGroup(group Group) (Group, error)
 
 	FindLinkByGroupId(id int) (UserGroupLinks, error)
+	FindLinkByUserAndGroup(groupId, userId int) (UserGroupLinks, error)
 	CreateGroupLink(userGroup UserGroupLinks) (UserGroupLinks, error)
 	DeleteGroupLink(userGroup UserGroupLinks) (UserGroupLinks, error)
 }
@@ -62,4 +63,6 @@ type Service interface {
 	UpdateGroup(id int, groupReq GroupUpdateRequest) (Group, error)
 	CreateGroup(userId int, group GroupRequest) (Group, error)
 	DeleteGroup(id int) (Group, error)
+
+	FindLinkByUserAndGroup(groupId, userId int) (UserGroupLinks, error)
 }

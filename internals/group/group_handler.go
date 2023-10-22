@@ -37,10 +37,13 @@ func (h *Handler) CreateGroup(c *gin.Context) {
 }
 
 func (h *Handler) UpdateGroup(c *gin.Context) {
+	authId, _ := c.Get("user_id")
 	idString := c.Param("id")
-	id, err := strconv.Atoi(idString)
+	id, _ := strconv.Atoi(idString)
+
+	_, err := h.Service.FindLinkByUserAndGroup(id, authId.(int))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "error parsing id"})
+		c.JSON(http.StatusForbidden, gin.H{"error": "no permission to edit this group"})
 		return
 	}
 
@@ -57,9 +60,12 @@ func (h *Handler) UpdateGroup(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err,
 		})
+		return
 	}
 
-	c.JSON(http.StatusOK, group)
+	c.JSON(http.StatusOK, gin.H{
+		"data": group,
+	})
 }
 
 func (h *Handler) FindById(c *gin.Context) {
@@ -80,10 +86,13 @@ func (h *Handler) FindById(c *gin.Context) {
 }
 
 func (h *Handler) DeleteGroup(c *gin.Context) {
+	authId, _ := c.Get("user_id")
 	idString := c.Param("id")
-	id, err := strconv.Atoi(idString)
+	id, _ := strconv.Atoi(idString)
+
+	_, err := h.Service.FindLinkByUserAndGroup(id, authId.(int))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		c.JSON(http.StatusForbidden, gin.H{"error": "no permission to edit this group"})
 		return
 	}
 

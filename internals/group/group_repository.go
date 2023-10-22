@@ -42,6 +42,12 @@ func (r *groupRepository) FindLinkByGroupId(id int) (UserGroupLinks, error) {
 	return userGroup, err
 }
 
+func (r *groupRepository) FindLinkByUserAndGroup(groupId, userId int) (UserGroupLinks, error) {
+	var userGroup UserGroupLinks
+	err := r.db.Raw("SELECT * FROM user_group_links WHERE group_id = ? AND user_id = ?", groupId, userId).First(&userGroup).Error
+	return userGroup, err
+}
+
 func (r *groupRepository) CreateGroupLink(userGroup UserGroupLinks) (UserGroupLinks, error) {
 	err := r.db.Create(&userGroup).Error
 	return userGroup, err
