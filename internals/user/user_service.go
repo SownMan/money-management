@@ -1,6 +1,8 @@
 package user
 
 import (
+	"errors"
+	"fmt"
 	"money-management/util"
 	"os"
 	"strconv"
@@ -24,11 +26,23 @@ func (s *userService) GetUserById(id int) (User, error) {
 	return u, err
 }
 
+func (s *userService) GetUserByEmail(email string) (User, error) {
+	u, err := s.Repository.GetUserByEmail(email)
+	return u, err
+}
+
 func (s *userService) CreateUser(user UserRequest) (SignUpResponse, error) {
 	u, _ := s.Repository.GetUserByEmail(user.Email)
 	if u.ID != 0 {
 		return SignUpResponse{}, nil
 	}
+
+	//checkValidPassword
+	checkPassword := util.ValidatePassword(user.Password)
+	if checkPassword != nil {
+		return SignUpResponse{}, checkPassword
+	}
+
 	//hash password
 	hashedPassword, err := util.HashPassword(user.Password)
 	if err != nil {
@@ -123,4 +137,39 @@ func (s *userService) DeleteUser(id int) (User, error) {
 		return User{}, err
 	}
 	return dUser, nil
+}
+
+func (s *userService) GetAllFriend(id int) ([]User, error) {
+	users, err := s.Repository.GetAllFriend(id)
+	return users, err
+}
+
+func (s *userService) AddFriend(friendEmail string, userId int) (User, error) {
+	friend, err := s.Repository.GetUserByEmail(friendEmail)
+	if err != nil {
+		return User{}, err
+	}
+	link, err := s.Repository.GetUserLink(userId, int(friend.ID))
+	fmt.Println(link)
+	if err != nil {
+		return User{}, err
+	}
+	if link.UserID != 0 {
+		return User{}, errors.New("this person is already on your friend list")
+	}
+	if friend.ID == uint(userId) {
+		return User{}, errors.New("you cannot add yourself")
+	}
+
+	userLink := UserUserLink{
+		UserID:   userId,
+		FriendID: int(friend.ID),
+	}
+
+	_, err = s.Repository.AddFriend(userLink)
+	if err != nil {
+		return User{}, err
+	}
+
+	return friend, nil
 }

@@ -51,12 +51,20 @@ type Repository interface {
 	CreateUser(user User) (User, error)
 	UpdateUser(user User) (User, error)
 	DeleteUser(user User) (User, error)
+
+	GetAllFriend(id int) ([]User, error)
+	GetUserLink(userId, friendId int) (UserUserLink, error)
+	AddFriend(link UserUserLink) (UserUserLink, error)
 }
 
 type Service interface {
 	GetUserById(id int) (User, error)
+	GetUserByEmail(email string) (User, error)
 	CreateUser(user UserRequest) (SignUpResponse, error)
 	Login(request LoginRequest) (LoginResponse, error)
 	UpdateUser(id int, user UserUpdateRequest) (User, error)
 	DeleteUser(id int) (User, error)
+
+	GetAllFriend(id int) ([]User, error)
+	AddFriend(friendEmail string, userId int) (User, error)
 }

@@ -24,5 +24,5 @@ func main() {
 	groupHandler := group.NewGroupHandler(groupSvc)
 
 	router.InitRouter(userHandler, groupHandler)
-	router.Start(":8081")
+	router.Start(":8080")
 }

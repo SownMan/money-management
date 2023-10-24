@@ -18,8 +18,13 @@ func InitRouter(userHandler *user.Handler, groupHandler *group.Handler) {
 	r.POST("/signup", userHandler.CreateUser)
 	r.POST("/login", userHandler.Login)
 	r.GET("/logout", userHandler.Logout)
+	r.GET("users", middlewre.RequireAuth, userHandler.GetUserByEmail)
 	r.PUT("/users/:id", middlewre.RequireAuth, userHandler.UpdateUser)
 	r.DELETE("users/:id", middlewre.RequireAuth, userHandler.DeleteUser)
+
+	//friend
+	r.GET("/users/friends", middlewre.RequireAuth, userHandler.GetAllFriend)
+	r.POST("/users/friends", middlewre.RequireAuth, userHandler.AddFriend)
 
 	//group
 	r.GET("/groups/:id", middlewre.RequireAuth, groupHandler.FindById)

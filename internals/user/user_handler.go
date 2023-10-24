@@ -1,6 +1,7 @@
 package user
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -15,6 +16,16 @@ func NewUserHandler(s Service) *Handler {
 	return &Handler{
 		Service: s,
 	}
+}
+
+func (h *Handler) GetUserByEmail(c *gin.Context) {
+	email := c.Query("email")
+	u, err := h.Service.GetUserByEmail(email)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
+	c.JSON(http.StatusOK, u)
 }
 
 func (h *Handler) CreateUser(c *gin.Context) {
@@ -63,7 +74,7 @@ func (h *Handler) UpdateUser(c *gin.Context) {
 		return
 	}
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 	}
 
 	var userRequest UserUpdateRequest
@@ -140,9 +151,35 @@ func (h *Handler) DeleteUser(c *gin.Context) {
 	u, err := h.Service.DeleteUser(id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": err,
+			"error": err.Error(),
 		})
 	}
 	c.SetCookie("jwt", "", -1, "", "", false, true)
 	c.JSON(http.StatusOK, u)
+}
+
+func (h *Handler) GetAllFriend(c *gin.Context) {
+	authId, _ := c.Get("user_id")
+	users, err := h.Service.GetAllFriend(authId.(int))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, users)
+}
+
+func (h *Handler) AddFriend(c *gin.Context) {
+	authId, _ := c.Get("user_id")
+	emailParam := c.Query("email")
+
+	u, err := h.Service.AddFriend(emailParam, authId.(int))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": fmt.Sprintf("success add %s as a friend", u.FirstName),
+	})
 }
