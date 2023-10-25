@@ -4,7 +4,7 @@ type groupService struct {
 	Repository
 }
 
-func NewGroupService(repository Repository) Service {
+func NewGroupService(repository Repository) *groupService {
 	return &groupService{repository}
 }
 

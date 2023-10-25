@@ -4,12 +4,12 @@ import (
 	"gorm.io/gorm"
 )
 
-func NewGroupRepository(db *gorm.DB) Repository {
-	return &groupRepository{db}
-}
-
 type groupRepository struct {
 	db *gorm.DB
+}
+
+func NewGroupRepository(db *gorm.DB) *groupRepository {
+	return &groupRepository{db}
 }
 
 // CreateGroup implements Repository.

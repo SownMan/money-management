@@ -21,7 +21,7 @@ func (h *Handler) CreateGroup(c *gin.Context) {
 	var groupReq GroupRequest
 	if err := c.ShouldBindJSON(&groupReq); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err,
+			"error": err.Error(),
 		})
 		return
 	}
@@ -29,7 +29,7 @@ func (h *Handler) CreateGroup(c *gin.Context) {
 	g, err := h.Service.CreateGroup(idInt, groupReq)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": err,
+			"error": err.Error(),
 		})
 		return
 	}
@@ -50,7 +50,7 @@ func (h *Handler) UpdateGroup(c *gin.Context) {
 	var groupReq GroupUpdateRequest
 	if err := c.ShouldBindJSON(&groupReq); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err,
+			"error": err.Error(),
 		})
 		return
 	}
@@ -58,7 +58,7 @@ func (h *Handler) UpdateGroup(c *gin.Context) {
 	group, err := h.Service.UpdateGroup(id, groupReq)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": err,
+			"error": err.Error(),
 		})
 		return
 	}
@@ -72,13 +72,13 @@ func (h *Handler) FindById(c *gin.Context) {
 	idString := c.Param("id")
 	id, err := strconv.Atoi(idString)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
 	g, err := h.Service.FindById(id)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -98,7 +98,7 @@ func (h *Handler) DeleteGroup(c *gin.Context) {
 
 	group, err := h.Service.DeleteGroup(id)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 

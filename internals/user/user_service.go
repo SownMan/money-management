@@ -17,12 +17,15 @@ type userService struct {
 	Repository
 }
 
-func NewUserService(repository Repository) Service {
+func NewUserService(repository Repository) *userService {
 	return &userService{repository}
 }
 
 func (s *userService) GetUserById(id int) (User, error) {
 	u, err := s.Repository.GetUserById(id)
+	if u.ID == 0 {
+		return User{}, errors.New("record not found")
+	}
 	return u, err
 }
 
