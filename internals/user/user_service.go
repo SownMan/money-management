@@ -170,6 +170,28 @@ func (s *userService) AddFriend(friendEmail string, userId int) (User, error) {
 	if err != nil {
 		return User{}, err
 	}
-
 	return friend, nil
+}
+
+func (s *userService) DeleteFriend(friendEmail string, userId int) (UserUserLink, error) {
+	friend, err := s.Repository.GetUserByEmail(friendEmail)
+	if err != nil {
+		return UserUserLink{}, err
+	}
+
+	link, err := s.Repository.GetUserLink(userId, int(friend.ID))
+	if err != nil {
+		return UserUserLink{}, err
+	}
+
+	if link.UserID == 0 {
+		return UserUserLink{}, errors.New("record not found")
+	}
+
+	deleteLink, err := s.Repository.DeleteFriend(link)
+	if err != nil {
+		return UserUserLink{}, err
+	}
+
+	return deleteLink, nil
 }

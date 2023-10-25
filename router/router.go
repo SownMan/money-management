@@ -25,6 +25,7 @@ func InitRouter(userHandler *user.Handler, groupHandler *group.Handler) {
 	//friend
 	r.GET("/users/friends", middlewre.RequireAuth, userHandler.GetAllFriend)
 	r.POST("/users/friends", middlewre.RequireAuth, userHandler.AddFriend)
+	r.DELETE("users/friends", middlewre.RequireAuth, userHandler.DeleteFriend)
 
 	//group
 	r.GET("/groups/:id", middlewre.RequireAuth, groupHandler.FindById)

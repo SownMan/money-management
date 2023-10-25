@@ -31,7 +31,6 @@ func RequireAuth(c *gin.Context) {
 
 		claim := claims["MapClaims"]
 		exp := claim.(map[string]interface{})
-		fmt.Println(exp)
 		//check the exp
 		if float64(time.Now().Unix()) > exp["exp"].(float64) {
 			c.AbortWithStatus(http.StatusUnauthorized)

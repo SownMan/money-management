@@ -183,3 +183,16 @@ func (h *Handler) AddFriend(c *gin.Context) {
 		"message": fmt.Sprintf("success add %s as a friend", u.FirstName),
 	})
 }
+
+func (h *Handler) DeleteFriend(c *gin.Context) {
+	authId, _ := c.Get("user_id")
+	emailParam := c.Query("email")
+
+	_, err := h.Service.DeleteFriend(emailParam, authId.(int))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, "success delete friend")
+}

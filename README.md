@@ -1,6 +1,6 @@
 Current TODO
 - if USER DELETE ACCOUNT, DELETE UserGroupLinks aswell
-- implement ADD FRIEND ON USER
+- implement delete friend
 - implement user member
 - implement group member
 - implement group history

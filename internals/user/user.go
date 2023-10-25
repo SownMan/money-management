@@ -55,6 +55,7 @@ type Repository interface {
 	GetAllFriend(id int) ([]User, error)
 	GetUserLink(userId, friendId int) (UserUserLink, error)
 	AddFriend(link UserUserLink) (UserUserLink, error)
+	DeleteFriend(link UserUserLink) (UserUserLink, error)
 }
 
 type Service interface {
@@ -67,4 +68,5 @@ type Service interface {
 
 	GetAllFriend(id int) ([]User, error)
 	AddFriend(friendEmail string, userId int) (User, error)
+	DeleteFriend(friendEmail string, userId int) (UserUserLink, error)
 }

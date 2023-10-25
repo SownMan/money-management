@@ -77,3 +77,8 @@ func (r *userRepository) AddFriend(link UserUserLink) (UserUserLink, error) {
 	err := r.db.Create(&link).Error
 	return link, err
 }
+
+func (r *userRepository) DeleteFriend(link UserUserLink) (UserUserLink, error) {
+	err := r.db.Raw("DELETE FROM user_user_links WHERE user_id = ? AND friend_id = ?", link.UserID, link.FriendID).Scan(&link).Error
+	return link, err
+}
